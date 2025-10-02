@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        .error {
+            color: red;
+            margin: 10px 0;
+        }
+        .success {
+            color: green;
+            margin: 10px 0;
+        }
+        .url-list {
+            margin-top: 20px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+
+    <div>
+        <% if (locals.error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+
+        <form method="POST" action="/url">
+            <label>Enter your URL:</label>
+            <input type="text" name="url" placeholder="https://example.com" required>
+            <button type="submit">Generate</button>
+        </form>
+
+        <% if (locals.id) { %>
+            <p class="success">
+                Short URL: <a href="/<%= id %>">http://localhost:8001/<%= id %></a>
+            </p>
+        <% } %>
+
+        <% if (locals.urls && urls.length > 0) { %>
+            <div class="url-list">
+                <h2>Recent URLs:</h2>
+                <ul>
+                    <% urls.forEach(url => { %>
+                        <li>
+                            <a href="/<%= url.shortId %>"><%= url.shortId %></a> 
+                            → <%= url.redirectURL %>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
