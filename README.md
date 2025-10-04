@@ -21,6 +21,7 @@ This URL Shortener is a web application designed to create shortened URLs that r
 ## Features
 
 ### Core Functionality
+
 - **URL Shortening**: Convert long URLs into short, memorable links
 - **Custom Aliases**: Create personalized short links with custom aliases
 - **QR Code Generation**: Generate QR codes for shortened URLs
@@ -33,6 +34,7 @@ This URL Shortener is a web application designed to create shortened URLs that r
   - Time-based analytics
 
 ### User Management
+
 - **User Accounts**: Register and manage your shortened URLs
 - **Dashboard**: Visual representation of link performance
 - **Bulk URL Creation**: Create multiple shortened URLs at once
@@ -41,17 +43,20 @@ This URL Shortener is a web application designed to create shortened URLs that r
 ## Tech Stack
 
 ### Frontend
+
 - HTML5, CSS3, JavaScript
 - Responsive design for mobile and desktop
 - Interactive charts for analytics visualization
 
 ### Backend
+
 - RESTful API architecture
 - Database for storing URL mappings and analytics
 - Authentication and authorization system
 - Rate limiting to prevent abuse
 
 ### Security Features
+
 - HTTPS encryption
 - Protection against spam and malicious URLs
 - Rate limiting for API requests
@@ -60,6 +65,7 @@ This URL Shortener is a web application designed to create shortened URLs that r
 ## Installation
 
 ### Prerequisites
+
 - Node.js (v14.0.0 or higher)
 - npm or yarn
 - MongoDB (v4.0 or higher)
@@ -67,23 +73,28 @@ This URL Shortener is a web application designed to create shortened URLs that r
 ### Setup Instructions
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/url-shortener.git
 cd url-shortener
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Configure environment variables:
+
 ```bash
 cp .env.example .env
 ```
+
 Edit the `.env` file with your configuration settings.
 
 4. Start the application:
+
 ```bash
 npm start
 ```
@@ -120,13 +131,13 @@ curl -X POST -H "Content-Type: application/json" -d '{"longUrl":"https://example
 
 ### Endpoints
 
-| Endpoint | Method | Description | Authentication Required |
-|----------|--------|-------------|------------------------|
-| `/api/shorten` | POST | Create a new shortened URL | No |
-| `/api/urls` | GET | Get all URLs for a user | Yes |
-| `/api/urls/:id` | GET | Get details for a specific URL | Yes |
-| `/api/urls/:id` | DELETE | Delete a shortened URL | Yes |
-| `/api/analytics/:id` | GET | Get analytics for a URL | Yes |
+| Endpoint             | Method | Description                    | Authentication Required |
+| -------------------- | ------ | ------------------------------ | ----------------------- |
+| `/api/shorten`       | POST   | Create a new shortened URL     | No                      |
+| `/api/urls`          | GET    | Get all URLs for a user        | Yes                     |
+| `/api/urls/:id`      | GET    | Get details for a specific URL | Yes                     |
+| `/api/urls/:id`      | DELETE | Delete a shortened URL         | Yes                     |
+| `/api/analytics/:id` | GET    | Get analytics for a URL        | Yes                     |
 
 For detailed API documentation, see the [API Documentation](docs/api.md) file.
 
@@ -175,6 +186,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-
 Built with ❤️ by Kunal Darekar
+
+```
+
 ```
