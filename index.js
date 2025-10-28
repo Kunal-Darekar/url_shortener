@@ -29,21 +29,24 @@ app.use("/" , staticRoute);
 app.use('/:shortId', async(req,res , next)=>{
     try{
     const shortId=req.params.shortId;
-    const entry = await URL.findOneAndUpdate({
-        shortId
-    } ,{$push:{
-        visitHistory:{
-         timestamp:Date.now()   
-        },
-    },
-},
-    {new :true}
-);
+    const entry = await URL.findOne({ shortId });
 
 if(!entry)
 {
     return res.status(400).json({error: "Short URL not Found !"});
 }
+
+if(entry.isActive === false){
+    return res.status(410).json({error: "Link is deactivated"});
+}
+if(entry.expiresAt && entry.expiresAt.getTime() <= Date.now()){
+    return res.status(410).json({error: "Link has expired"});
+}
+
+await URL.updateOne({ _id: entry._id }, {
+    $push: { visitHistory: { timestamp: Date.now() } },
+    $set: { lastAccessed: new Date() }
+});
 return res.redirect(entry.redirectURL)
     }catch(err)
     {
