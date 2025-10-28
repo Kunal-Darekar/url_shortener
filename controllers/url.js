@@ -12,29 +12,67 @@ async function handleGenerateNewShortURL(req,res){
         destination = `http://${destination}`;
     }
     try{
+        // Validate
         // eslint-disable-next-line no-new
         new URL(destination);
     }catch(err){
         return res.status(400).json({error:"Invalid URL"});
     }
 
-    const shortId= nanoid(8);
-    await URL.create({
-        shortId :shortId,
-        redirectURL: destination,
-        visitHistory:[],
+    // Optional custom alias; fallback to generated id
+    let shortId = (body.shortId || "").trim();
+    if(shortId === ""){
+        shortId = nanoid(8);
+    }
 
-    });
+    // Optional expiry
+    let expiresAt = null;
+    if(body.expiresAt){
+        const parsed = new Date(body.expiresAt);
+        if(isNaN(parsed.getTime())){
+            return res.status(400).json({error:"Invalid expiresAt date"});
+        }
+        if(parsed.getTime() <= Date.now()){
+            return res.status(400).json({error:"expiresAt must be in the future"});
+        }
+        expiresAt = parsed;
+    }
 
-    return  res.render("home",
-        { id :shortId});
+    // Optional isActive flag
+    const isActive = body.isActive === undefined ? true : Boolean(body.isActive);
 
+    try{
+        const created = await URL.create({
+            shortId,
+            redirectURL: destination,
+            isActive,
+            expiresAt,
+            visitHistory:[],
+        });
+
+        // If EJS view expects id only, keep same shape
+        return res.render("home", { id: created.shortId });
+    }catch(err){
+        if(err && err.code === 11000){
+            return res.status(409).json({error:"shortId already exists"});
+        }
+        return res.status(500).json({error:"Failed to create short URL"});
+    }
 }
 async function handleGetAnalytics(req,res){
     const shortId=req.params.shortId;
     const result = await URL.findOne({shortId});
-    return res.json({totalClicks:result.visitHistory.length, 
+    if(!result){
+        return res.status(404).json({error:"Not found"});
+    }
+    return res.json({
+        totalClicks: result.visitHistory.length,
         analytics: result.visitHistory,
+        isActive: result.isActive,
+        expiresAt: result.expiresAt,
+        lastAccessed: result.lastAccessed,
+        createdAt: result.createdAt,
+        redirectURL: result.redirectURL,
     });
 
 
