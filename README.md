@@ -2,6 +2,20 @@
 
 A simple URL shortener service built with Node.js, Express, and MongoDB.
 
+## Quickstart
+
+1. Copy `.env.example` to `.env` and set `MONGODB_URL`.
+2. Start in dev mode: `npm run dev`
+3. Open `http://localhost:8001`
+
+## Environment
+
+Create `.env` with:
+
+```
+MONGODB_URL=mongodb://localhost:27017/url_short
+```
+
 ## Features
 
 - Shorten long URLs to 8-character unique IDs
