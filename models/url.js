@@ -11,6 +11,18 @@ const urlSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    expiresAt: {
+        type: Date,
+        default: null
+    },
+    lastAccessed: {
+        type: Date,
+        default: null
+    },
     visitHistory:[{timestamp:{ type:Number}}],
 },
 {timestamps : true}
