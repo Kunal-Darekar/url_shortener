@@ -17,9 +17,9 @@ app.set("views" ,path.resolve ('./views'));
 const PORT=8001;
 
 app.get("/test" , async (req,res)=>{
-    const urls=await URL.find();
+    const urls=await URL.find().sort({ createdAt: -1 }).limit(20);
 return res.render("home",{
-    urls:urls
+    urls
 })
 })
 connectToMongoDB(process.env.MONGODB_URL)
