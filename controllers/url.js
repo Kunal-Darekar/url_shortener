@@ -3,36 +3,76 @@ import {URL} from  '../models/url.js'
 
 async function handleGenerateNewShortURL(req,res){
     const body=req.body;
-    const New_Variable=!body.url;
-    if(New_Variable)return res.status(400).json({error:"URL is required"});
+    const isMissingUrl=!body.url;
+    if(isMissingUrl)return res.status(400).json({error:"URL is required"});
 
-    const shortId= body.shortId && String(body.shortId).trim() !== '' ? String(body.shortId).trim() : nanoid(8);
-    const payload = {
-        shortId :shortId,
-        redirectURL: body.url,
-        visitHistory:[],
-    };
+    // Basic URL validation and normalization
+    let destination = String(body.url).trim();
+    if(!/^https?:\/\//i.test(destination)){
+        destination = `http://${destination}`;
+    }
+    try{
+        // Validate
+        // eslint-disable-next-line no-new
+        new URL(destination);
+    }catch(err){
+        return res.status(400).json({error:"Invalid URL"});
+    }
+
+    // Optional custom alias; fallback to generated id
+    let shortId = (body.shortId || "").trim();
+    if(shortId === ""){
+        shortId = nanoid(8);
+    }
+
+    // Optional expiry
+    let expiresAt = null;
     if(body.expiresAt){
-        const d = new Date(body.expiresAt);
-        if(!isNaN(d.getTime())){
-            payload.expiresAt = d;
+        const parsed = new Date(body.expiresAt);
+        if(isNaN(parsed.getTime())){
+            return res.status(400).json({error:"Invalid expiresAt date"});
         }
+        if(parsed.getTime() <= Date.now()){
+            return res.status(400).json({error:"expiresAt must be in the future"});
+        }
+        expiresAt = parsed;
     }
-    if(typeof body.isActive !== 'undefined'){
-        payload.isActive = Boolean(body.isActive);
+
+    // Optional isActive flag
+    const isActive = body.isActive === undefined ? true : Boolean(body.isActive);
+
+    try{
+        const created = await URL.create({
+            shortId,
+            redirectURL: destination,
+            isActive,
+            expiresAt,
+            visitHistory:[],
+        });
+
+        // If EJS view expects id only, keep same shape
+        return res.render("home", { id: created.shortId });
+    }catch(err){
+        if(err && err.code === 11000){
+            return res.status(409).json({error:"shortId already exists"});
+        }
+        return res.status(500).json({error:"Failed to create short URL"});
     }
-
-    await URL.create(payload);
-
-    return  res.render("home",
-        { id :shortId});
-
 }
 async function handleGetAnalytics(req,res){
     const shortId=req.params.shortId;
     const result = await URL.findOne({shortId});
-    return res.json({totalClicks:result.visitHistory.length, 
+    if(!result){
+        return res.status(404).json({error:"Not found"});
+    }
+    return res.json({
+        totalClicks: result.visitHistory.length,
         analytics: result.visitHistory,
+        isActive: result.isActive,
+        expiresAt: result.expiresAt,
+        lastAccessed: result.lastAccessed,
+        createdAt: result.createdAt,
+        redirectURL: result.redirectURL,
     });
 
 
