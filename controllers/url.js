@@ -21,8 +21,17 @@ async function handleGenerateNewShortURL(req,res){
 async function handleGetAnalytics(req,res){
     const shortId=req.params.shortId;
     const result = await URL.findOne({shortId});
+    if(!result){
+        return res.status(404).json({error:"Not found"});
+    }
     return res.json({totalClicks:result.visitHistory.length, 
         analytics: result.visitHistory,
+        isActive: result.isActive,
+        expiresAt: result.expiresAt,
+        lastAccessed: result.lastAccessed,
+        redirectURL: result.redirectURL,
+        createdAt: result.createdAt,
+        updatedAt: result.updatedAt,
     });
 
 
