@@ -79,11 +79,11 @@ async function handleGetAnalytics(req,res){
 }
 async function getallurl(req,res){
     try{
-    const result= await URL.find();
-    return res.status(200).json(result);
+    const result= await URL.find().sort({ createdAt: -1 }).limit(100);
+    return res.status(200).json({ count: result.length, urls: result });
     }catch(error)
     {
-        res.status(500).json({msg : error.message()});
+        res.status(500).json({ error: 'Failed to fetch URLs' });
     }
 }
 
