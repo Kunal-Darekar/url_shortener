@@ -1,6 +1,8 @@
 import express, { urlencoded } from 'express';
 import { connectToMongoDB } from './connect.js';
 import urlRoute from './routes/url.js';
+import docsRoute from './routes/docs.js';
+import healthRoute from './routes/health.js';
 import path from "path";
 import dotenv from "dotenv";
 import { URL } from './models/url.js';
@@ -24,6 +26,8 @@ return res.render("home",{
 })
 connectToMongoDB(process.env.MONGODB_URL)
 app.use('/url',urlRoute);
+app.use('/api-docs', docsRoute);
+app.use('/health', healthRoute);
 
 app.use("/" , staticRoute);
 app.use('/:shortId', async(req,res , next)=>{
