@@ -1,30 +1,82 @@
 # URL Shortener
 
-A simple URL shortener service built with Node.js, Express, and MongoDB.
+A powerful and efficient URL shortening service that transforms long, unwieldy URLs into concise, shareable links.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Documentation](#api-documentation)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Overview
+
+This URL Shortener is a web application designed to create shortened URLs that redirect to original longer URLs. It provides an elegant solution for sharing links on platforms with character limitations, tracking click analytics, and making URLs more manageable.
 
 ## Features
 
-- Shorten long URLs to 8-character unique IDs
-- Track visit analytics for each shortened URL
-- View list of recently shortened URLs
-- Clean and simple web interface
-- Visit history tracking
+### Core Functionality
+
+- **URL Shortening**: Convert long URLs into short, memorable links
+- **Custom Aliases**: Create personalized short links with custom aliases
+- **QR Code Generation**: Generate QR codes for shortened URLs
+- **Link Expiration**: Set expiration dates for temporary links
+- **Click Analytics**: Track visitor statistics including:
+  - Total clicks
+  - Referrer sources
+  - Geographic location
+  - Device information
+  - Time-based analytics
+
+### User Management
+
+- **User Accounts**: Register and manage your shortened URLs
+- **Dashboard**: Visual representation of link performance
+- **Bulk URL Creation**: Create multiple shortened URLs at once
+- **Link History**: Access and manage previously created links
 
 ## Tech Stack
 
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- EJS templating
-- nanoid for ID generation
+### Frontend
+
+- HTML5, CSS3, JavaScript
+- Responsive design for mobile and desktop
+- Interactive charts for analytics visualization
+
+### Backend
+
+- RESTful API architecture
+- Database for storing URL mappings and analytics
+- Authentication and authorization system
+- Rate limiting to prevent abuse
+
+### Security Features
+
+- HTTPS encryption
+- Protection against spam and malicious URLs
+- Rate limiting for API requests
+- Data validation and sanitization
 
 ## Installation
+
+### Prerequisites
+
+- Node.js (v14.0.0 or higher)
+- npm or yarn
+- MongoDB (v4.0 or higher)
+
+### Setup Instructions
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/url_shortener.git
-cd url_shortener
+git clone https://github.com/yourusername/url-shortener.git
+cd url-shortener
 ```
 
 2. Install dependencies:
@@ -33,39 +85,109 @@ cd url_shortener
 npm install
 ```
 
-3. Create a `.env` file in the root directory with:
+3. Configure environment variables:
 
-```
-MONGODB_URL=your_mongodb_connection_string
+```bash
+cp .env.example .env
 ```
 
-4. Start the server:
+Edit the `.env` file with your configuration settings.
+
+4. Start the application:
 
 ```bash
 npm start
 ```
 
-The application will be available at `http://localhost:8001`
+5. Access the application at `http://localhost:3000`
 
-## API Endpoints
+## Usage
 
-- `POST /url` - Create a new short URL
-- `GET /analytics/:shortId` - Get analytics for a specific URL
-- `GET /:shortId` - Redirect to original URL
-- `GET /` - Home page with URL submission form and list of recent URLs
+### Creating a Shortened URL
+
+1. Navigate to the homepage
+2. Enter the long URL in the input field
+3. (Optional) Customize the alias or set an expiration date
+4. Click "Shorten" to generate your shortened URL
+5. Copy and share your new shortened link
+
+### Managing URLs (Registered Users)
+
+1. Log in to your account
+2. Access the dashboard to view all your shortened URLs
+3. View analytics for each link
+4. Edit or delete existing links
+5. Export analytics data in various formats
+
+### API Usage
+
+Basic API request to create a shortened URL:
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"longUrl":"https://example.com/very/long/url/that/needs/shortening"}' http://yourdomain.com/api/shorten
+```
+
+## API Documentation
+
+### Endpoints
+
+| Endpoint             | Method | Description                    | Authentication Required |
+| -------------------- | ------ | ------------------------------ | ----------------------- |
+| `/api/shorten`       | POST   | Create a new shortened URL     | No                      |
+| `/api/urls`          | GET    | Get all URLs for a user        | Yes                     |
+| `/api/urls/:id`      | GET    | Get details for a specific URL | Yes                     |
+| `/api/urls/:id`      | DELETE | Delete a shortened URL         | Yes                     |
+| `/api/analytics/:id` | GET    | Get analytics for a URL        | Yes                     |
+
+For detailed API documentation, see the [API Documentation](docs/api.md) file.
 
 ## Project Structure
 
 ```
-├── connect.js         # MongoDB connection setup
-├── controllers/       # Request handlers
-├── models/           # Database models
-├── routes/           # Route definitions
-├── views/            # EJS templates
-└── index.js          # Application entry point
+url-shortener/
+├── client/                 # Frontend code
+│   ├── public/             # Static assets
+│   └── src/                # React components and styles
+├── server/                 # Backend code
+│   ├── controllers/        # Request handlers
+│   ├── models/             # Database models
+│   ├── routes/             # API routes
+│   ├── middleware/         # Custom middleware
+│   └── utils/              # Helper functions
+├── config/                 # Configuration files
+├── tests/                  # Test suites
+└── docs/                   # Documentation
 ```
 
-## Environment Variables
+## Contributing
 
-- `MONGODB_URL`: MongoDB connection string
+We welcome contributions to improve the URL Shortener! Please follow these steps:
 
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgements
+
+- [MongoDB](https://www.mongodb.com/) - Database
+- [Express.js](https://expressjs.com/) - Web framework
+- [React](https://reactjs.org/) - Frontend library
+- [Node.js](https://nodejs.org/) - JavaScript runtime
+
+---
+
+Built with ❤️ by Kunal Darekar
+
+```
+
+```
